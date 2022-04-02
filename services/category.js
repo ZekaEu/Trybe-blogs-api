@@ -1,3 +1,4 @@
+const { Op } = require('sequelize');
 const { Category } = require('../models');
 
 const create = async (categoryData) => {
@@ -10,7 +11,17 @@ const getAll = async () => {
   return result;
 };
 
+const getIds = async (arr) => {
+  const find = await Category.findAll({
+    where: {
+      id: { [Op.or]: arr },
+    },
+  });
+  return find;
+};
+
 module.exports = {
   create,
   getAll,
+  getIds,
 };

@@ -1,18 +1,9 @@
-require('dotenv').config();
-const jwt = require('jsonwebtoken');
-
-const SECRET = process.env.JWT_SECRET;
+const authService = require('../services/auth');
 
 module.exports = (req, res, next) => {
-  try {
-    const { authorization } = req.headers;
-    if (!authorization) return res.status(401).json({ message: 'Token not found' });
-    const verifyToken = jwt.verify(authorization, SECRET);
-    req.token = verifyToken.data;
-    next();
-  } catch (e) {
-    if (e.name.includes('Token')) {
-      return res.status(401).json({ message: 'Expired or invalid token' });
-    }
-  }
+  const { authorization } = req.headers;
+  if (!authorization) return res.status(401).json({ message: 'Token not found' });
+  const token = authService.verifyToken(authorization);
+  if (token.message) return res.status(401).json({ message: 'Expired or invalid token' });
+  next();
 };
