@@ -1,5 +1,5 @@
 const userService = require('../services/user');
-const { generateToken } = require('../services/auth');
+const { generateToken, verifyToken } = require('../services/auth');
 
 const create = async (req, res, next) => {
   try {
@@ -33,8 +33,20 @@ const getById = async (req, res, next) => {
   }
 };
 
+const obliterate = async (req, res, next) => {
+  try {
+    const { authorization } = req.headers;
+    const email = verifyToken(authorization);
+    await userService.obliterate(email);
+    return res.status(204).end();
+  } catch (e) {
+    next(e);
+  }
+};
+
 module.exports = {
   create,
   getAll,
   getById,
+  obliterate,
 };
