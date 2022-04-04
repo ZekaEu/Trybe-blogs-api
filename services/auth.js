@@ -18,7 +18,6 @@ const verifyToken = (token) => {
     const { data } = jwt.verify(token, SECRET);
     return data;
   } catch (e) {
-    // return { message: 'Uepaaaaaa' };
     return { message: 'Expired or invalid token' };
   }
 };

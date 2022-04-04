@@ -1,4 +1,5 @@
 const { BlogPost, User, Category } = require('../models');
+const authService = require('./auth');
 
 const create = async (blogPostData) => {
   const created = await BlogPost.create(blogPostData);
@@ -41,12 +42,30 @@ const getById = async (id) => {
     },
     ],
   });
-  console.log(gotBlogPost);
   return gotBlogPost;
+};
+
+const update = async ({ id, title, content }, token) => {
+  const data = authService.verifyToken(token);
+  const [userData] = await User.findAll({ where: { email: data } });
+  const result = await getById(id);
+  console.log(userData.id);
+  console.log(result.dataValues.id);
+  if (userData.id !== result.dataValues.id) return false;
+  await BlogPost.update({ title, content },
+    { where: { id } });
+  const [newBlogPost] = await BlogPost.findAll({
+    where: { id },
+    attributes: ['title', 'content', 'userId'],
+    include: [{ model: Category, as: 'categories', through: { attributes: [] },
+    }],
+  });
+  return newBlogPost.dataValues;
 };
 
 module.exports = {
   create,
   getAll,
   getById,
+  update,
 };
