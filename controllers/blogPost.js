@@ -13,8 +13,21 @@ const create = async (req, res, next) => {
     }
     const email = authService.verifyToken(authorization);
     const [user] = await userService.getAll({ where: { email }, attributes: ['id'] });
-    const newPost = await blogPostService.create({ userId: user.dataValues.id, title, content });
+    const newPost = await blogPostService.create({
+      userId: user.dataValues.id,
+      title,
+      content,
+      categoryIds });
     return res.status(201).json(newPost);
+  } catch (e) {
+    next(e);
+  }
+};
+
+const getAll = async (_req, res, next) => {
+  try {
+    const allBlogPosts = await blogPostService.getAll();
+    return res.status(200).json(allBlogPosts);
   } catch (e) {
     next(e);
   }
@@ -22,4 +35,5 @@ const create = async (req, res, next) => {
 
 module.exports = {
   create,
+  getAll,
 };

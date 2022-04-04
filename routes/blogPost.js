@@ -7,4 +7,6 @@ const blogPostRouter = express.Router();
 
 blogPostRouter.post('/', checkToken, checkBlogPost, blogPostController.create);
 
+blogPostRouter.get('/', checkToken, blogPostController.getAll);
+
 module.exports = blogPostRouter;
