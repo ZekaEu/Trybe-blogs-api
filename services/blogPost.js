@@ -21,11 +21,32 @@ const getAll = async () => {
     },
   ],
   });
-  console.log(result[0].categories);
   return result;
+};
+
+const getById = async (id) => {
+  const gotBlogPost = await BlogPost.findOne({
+    where: { id },
+    include: [{
+      model: User,
+      as: 'user',
+      attributes: { exclude: ['password'] },
+    },
+    {
+      model: Category,
+      as: 'categories',
+      through: {
+        attributes: [],
+      },
+    },
+    ],
+  });
+  console.log(gotBlogPost);
+  return gotBlogPost;
 };
 
 module.exports = {
   create,
   getAll,
+  getById,
 };

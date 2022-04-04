@@ -9,4 +9,6 @@ blogPostRouter.post('/', checkToken, checkBlogPost, blogPostController.create);
 
 blogPostRouter.get('/', checkToken, blogPostController.getAll);
 
+blogPostRouter.get('/:id', checkToken, blogPostController.getById);
+
 module.exports = blogPostRouter;
