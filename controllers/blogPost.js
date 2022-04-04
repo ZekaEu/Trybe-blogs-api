@@ -57,9 +57,24 @@ const update = async (req, res, next) => {
   }
 };
 
+const obliterate = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { authorization } = req.headers;
+    const foundBlogPost = await blogPostService.getById(id);
+    if (!foundBlogPost) return res.status(404).json({ message: 'Post does not exist' });
+    const exodia = await blogPostService.obliterate(id, authorization);
+    if (!exodia) return res.status(401).json({ message: 'Unauthorized user' });
+    return res.status(204).end();
+  } catch (e) {
+    next(e);
+  }
+};
+
 module.exports = {
   create,
   getAll,
   getById,
   update,
+  obliterate,
 };

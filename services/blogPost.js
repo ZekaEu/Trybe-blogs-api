@@ -49,8 +49,6 @@ const update = async ({ id, title, content }, token) => {
   const data = authService.verifyToken(token);
   const [userData] = await User.findAll({ where: { email: data } });
   const result = await getById(id);
-  console.log(userData.id);
-  console.log(result.dataValues.id);
   if (userData.id !== result.dataValues.id) return false;
   await BlogPost.update({ title, content },
     { where: { id } });
@@ -63,9 +61,19 @@ const update = async ({ id, title, content }, token) => {
   return newBlogPost.dataValues;
 };
 
+const obliterate = async (id, token) => {
+  const data = authService.verifyToken(token);
+  const [userData] = await User.findAll({ where: { email: data } });
+  const result = await getById(id);
+  if (userData.id !== result.dataValues.id) return false;
+  const deleted = await BlogPost.destroy({ where: { id } });
+  return deleted;
+};
+
 module.exports = {
   create,
   getAll,
   getById,
   update,
+  obliterate,
 };

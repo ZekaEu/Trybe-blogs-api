@@ -13,4 +13,6 @@ blogPostRouter.get('/:id', checkToken, blogPostController.getById);
 
 blogPostRouter.put('/:id', checkToken, checkNewBlogPost, blogPostController.update);
 
+blogPostRouter.delete('/:id', checkToken, blogPostController.obliterate);
+
 module.exports = blogPostRouter;
